@@ -862,7 +862,7 @@ $mdPanel,cockpitModule_widgetSelection,cockpitModule_properties,cockpitModule_ut
 		if(!dataset || (dataset && dataset.useCache==false)){
 			params+="&nearRealtime=true";
 		}
-
+		
 		var limitRows;
 		if(ngModel.limitRows){
 			limitRows = ngModel.limitRows;
@@ -871,7 +871,10 @@ $mdPanel,cockpitModule_widgetSelection,cockpitModule_properties,cockpitModule_ut
 		}
 		if(limitRows != undefined && limitRows.enable && limitRows.rows > 0){
 			params += "&limit=" + limitRows.rows;
+		} else if(cockpitModule_properties.EDIT_MODE && cockpitModule_properties.EDIT_MODE === true){
+			params += "&limit=" + 100;
 		}
+		
 
 		var filtersToSendWithoutParams = ds.getWidgetSelectionsAndFilters(ngModel, dataset, loadDomainValues);
 

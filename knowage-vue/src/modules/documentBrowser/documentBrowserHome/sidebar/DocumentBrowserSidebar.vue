@@ -5,6 +5,7 @@
                 <div id="document-icons-container" class="p-d-flex p-flex-row p-jc-around ">
                     <i class="fa fa-play-circle document-pointer p-mx-4" v-tooltip.top="$t('documentBrowser.executeDocument')" @click="executeDocument" v-if="user?.functionalities.includes('DocumentUserManagement')" />
                     <template v-if="canEditDocument">
+						<i class="pi pi-pencil document-pointer p-mx-4" v-tooltip.top="$t('documentBrowser.editDirectly')" @click="editDocumentDirectly" />
                         <i class="pi pi-pencil document-pointer p-mx-4" v-tooltip.top="$t('documentBrowser.editDocument')" @click="$emit('showDocumentDetails', document)" />
                         <i class="far fa-copy document-pointer p-mx-4" v-tooltip.top="$t('documentBrowser.cloneDocument')" @click="cloneDocumentConfirm" />
                         <i class="far fa-trash-alt document-pointer p-mx-4" v-tooltip.top="$t('documentBrowser.deleteDocument')" @click="deleteDocumentConfirm" v-if="user?.functionalities.includes('DocumentDeleteManagement')" />
@@ -13,7 +14,7 @@
                     <i
                         v-if="user?.functionalities.includes('DocumentMoveDownState') && (document.stateCode === 'TEST' || document.stateCode === 'REL')"
                         class="fa fa-arrow-down document-pointer p-mx-4"
-                        v-tooltip.left="$t('documentBrowser.moveDownDocumentState')"
+                        v-tooltip.left="$t('documentBrowser.moveDownDocumentState')" 
                         @click="changeStateDocumentConfirm('DOWN')"
                     />
                 </div>
@@ -139,6 +140,9 @@ export default defineComponent({
         },
         executeDocument() {
             this.$emit('itemSelected', { item: this.document, mode: 'execute' })
+        },
+		editDocumentDirectly() {
+            this.$emit('itemSelected', { item: this.document, mode: 'execute', documentMode: 'EDIT' })
         }
     }
 })

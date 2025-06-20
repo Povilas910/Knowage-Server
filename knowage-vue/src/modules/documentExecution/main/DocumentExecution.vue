@@ -276,6 +276,9 @@ export default defineComponent({
 
         if (this.propMode !== 'document-execution' && !this.$route.path.includes('olap-designer') && this.$route.name !== 'document-execution' && this.$route.name !== 'document-execution-embed' && this.$route.name !== 'document-execution-workspace') return
 
+        if(this.$route.query.documentMode)
+            this.documentMode = 'EDIT';
+
         await this.loadUserConfig()
 
         this.isOlapDesignerMode()

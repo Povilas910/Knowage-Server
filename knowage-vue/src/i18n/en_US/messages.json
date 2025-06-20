@@ -333,7 +333,8 @@
         "moveDownDocumentState": "Move Down State Document",
         "moveUpDocumentState": "Move Up State Document",
         "noDocumentsHint": "No documents to display",
-        "title": "Document browser"
+        "title": "Document browser",
+        "editDirectly": "Go to Edit Mode directly"
     },
     "documentExecution": {
         "documentDetails": {

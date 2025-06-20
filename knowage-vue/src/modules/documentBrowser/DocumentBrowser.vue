@@ -151,7 +151,10 @@ export default defineComponent({
                 if (payload.item) {
                     let routeDocumentType = this.getRouteDocumentType(payload.item)
                     this.selectedItem.item.showMode = 'execute'
-                    this.$router.push(`/document-browser/${routeDocumentType}/` + id)
+                    if(payload.documentMode)
+                        this.$router.push(`/document-browser/${routeDocumentType}/` + id + '?documentMode=EDIT')
+                    else
+                        this.$router.push(`/document-browser/${routeDocumentType}/` + id)
                 } else {
                     this.selectedItem.item = { routerId: crypto.randomBytes(16).toString('hex') }
                     this.selectedItem.item.showMode = 'createCockpit'
