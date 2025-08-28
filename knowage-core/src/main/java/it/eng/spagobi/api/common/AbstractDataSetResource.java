@@ -179,8 +179,14 @@ public abstract class AbstractDataSetResource extends AbstractSpagoBIResource {
 				indexes, widgetName);
 	}
 
+	
 	public String getDataStore(String label, String parameters, Map<String, Object> drivers, String selections, String likeSelections, int maxRowCount,
 			String aggregations, String summaryRow, int offset, int fetchSize, Boolean isNearRealtime, String options, Set<String> indexes, String widgetName) {
+		return this.getDataStore(label, parameters, drivers, selections, likeSelections, maxRowCount, aggregations, summaryRow, offset, fetchSize, isNearRealtime, options, indexes, widgetName, "false");
+	}
+	
+	public String getDataStore(String label, String parameters, Map<String, Object> drivers, String selections, String likeSelections, int maxRowCount,
+			String aggregations, String summaryRow, int offset, int fetchSize, Boolean isNearRealtime, String options, Set<String> indexes, String widgetName, String isEditMode) {
 		logger.debug("IN");
 		Monitor totalTiming = MonitorFactory.start("Knowage.AbstractDataSetResource.getDataStore");
 		try {
@@ -275,8 +281,16 @@ public abstract class AbstractDataSetResource extends AbstractSpagoBIResource {
 			}
 
 			Monitor timingMinMax = MonitorFactory.start("Knowage.AbstractDataSetResource.getDataStore:calculateMinMax");
-			filters = getDatasetManagementAPI().calculateMinMaxFilters(dataSet, isNearRealtime, DataSetUtilities.getParametersMap(parameters), filters,
+			
+			Map<String, String> filterParams = DataSetUtilities.getParametersMap(parameters);
+			boolean shouldPutEditMode = "true".equalsIgnoreCase(isEditMode);
+			
+			if(shouldPutEditMode)
+				filterParams.put("__isEditMode", isEditMode);
+			
+			filters = getDatasetManagementAPI().calculateMinMaxFilters(dataSet, isNearRealtime, filterParams, filters,
 					likeFilters, indexes);
+			
 			timingMinMax.stop();
 
 			Filter where = getDatasetManagementAPI().getWhereFilter(filters, likeFilters);
@@ -285,7 +299,11 @@ public abstract class AbstractDataSetResource extends AbstractSpagoBIResource {
 
 			List<List<AbstractSelectionField>> summaryRowArray = getSummaryRowArray(summaryRow, dataSet, columnAliasToName);
 
-			IDataStore dataStore = getDatasetManagementAPI().getDataStore(dataSet, isNearRealtime, DataSetUtilities.getParametersMap(parameters), projections,
+			Map<String, String> dataStoreParams = DataSetUtilities.getParametersMap(parameters);
+			if(shouldPutEditMode)
+				dataStoreParams.put("__isEditMode", isEditMode);
+			
+			IDataStore dataStore = getDatasetManagementAPI().getDataStore(dataSet, isNearRealtime, dataStoreParams, projections,
 					where, groups, sortings, summaryRowArray, offset, fetchSize, maxRowCount, indexes);
 
 			// if required apply function from catalog

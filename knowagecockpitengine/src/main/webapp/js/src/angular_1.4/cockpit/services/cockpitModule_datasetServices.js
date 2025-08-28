@@ -871,10 +871,14 @@ $mdPanel,cockpitModule_widgetSelection,cockpitModule_properties,cockpitModule_ut
 		}
 		if(limitRows != undefined && limitRows.enable && limitRows.rows > 0){
 			params += "&limit=" + limitRows.rows;
-		} else if(cockpitModule_properties.EDIT_MODE && cockpitModule_properties.EDIT_MODE === true){
+		} 
+		/*else if(cockpitModule_properties.EDIT_MODE && cockpitModule_properties.EDIT_MODE === true){
 			params += "&limit=" + 100;
-		}
+		}*/
 		
+		if(cockpitModule_properties.EDIT_MODE && cockpitModule_properties.EDIT_MODE === true){
+			params += "&isEditMode=true";
+		}
 
 		var filtersToSendWithoutParams = ds.getWidgetSelectionsAndFilters(ngModel, dataset, loadDomainValues);
 

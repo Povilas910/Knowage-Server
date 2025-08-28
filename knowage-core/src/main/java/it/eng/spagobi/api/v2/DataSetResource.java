@@ -303,7 +303,8 @@ public class DataSetResource extends AbstractDataSetResource {
 	@UserConstraint(functionalities = { CommunityFunctionalityConstants.SELF_SERVICE_DATASET_MANAGEMENT })
 	public Response addDataSet(String body) {
 		SbiDataSet sbiDataset = (SbiDataSet) JsonConverter.jsonToValidObject(body, SbiDataSet.class);
-
+		
+		
 		sbiDataset.setId(new SbiDataSetId(null, 1, getUserProfile().getOrganization()));
 		sbiDataset.setOwner((String) getUserProfile().getUserId());
 		IDataSet dataset = DataSetFactory.toDataSet(sbiDataset);
@@ -706,7 +707,6 @@ public class DataSetResource extends AbstractDataSetResource {
 			logger.debug("OUT");
 		}
 	}
-
 	@POST
 	@Path("/{label}/data")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -714,7 +714,8 @@ public class DataSetResource extends AbstractDataSetResource {
 	public String getDataStorePostWithJsonInBody(@PathParam("label") String label, String body,
 			@DefaultValue("-1") @QueryParam("limit") int maxRowCount,
 			@DefaultValue("-1") @QueryParam("offset") int offset, @DefaultValue("-1") @QueryParam("size") int fetchSize,
-			@QueryParam("nearRealtime") boolean isNearRealtime, @QueryParam("widgetName") String widgetName) {
+			@QueryParam("nearRealtime") boolean isNearRealtime, @QueryParam("widgetName") String widgetName, 
+			@QueryParam("isEditMode") @DefaultValue("false") String isEditMode) {
 		try {
 			Monitor timing = MonitorFactory.start("Knowage.DataSetResource.getDataStorePostWithJsonInBody:parseInputs");
 
@@ -768,7 +769,7 @@ public class DataSetResource extends AbstractDataSetResource {
 					JSONArray columnsArrayTemp = jsonIndexes.getJSONObject(k).getJSONArray("fields");
 
 					JSONObject columnsArray = columnsArrayTemp.getJSONObject(0);
-
+					
 					if (columnsArray.getString("store").equals(label)) {
 						columns.add(columnsArray.getString("column"));
 					}
@@ -776,7 +777,7 @@ public class DataSetResource extends AbstractDataSetResource {
 			}
 			timing.stop();
 			return getDataStore(label, parameters, driversRuntimeMap, selections, likeSelections, maxRowCount,
-					aggregations, summaryRow, offset, fetchSize, isNearRealtime, options, columns, widgetName);
+					aggregations, summaryRow, offset, fetchSize, isNearRealtime, options, columns, widgetName, isEditMode);
 		} catch (CatalogFunctionException e) {
 			throw e;
 		} catch (Exception e) {
